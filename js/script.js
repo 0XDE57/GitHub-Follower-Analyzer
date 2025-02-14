@@ -8,28 +8,40 @@ let followersFollowing = [];
 
 let currentPage = 1;
 
-$(document).ready(function () {
-    $('#github-form').submit(function (event) {
+
+document.onreadystatechange = function () {
+    if (document.readyState === "complete") {
+        //cant find #img-divs yet
+        hideLoading(); // Hide the loading when the document is fully loaded
+        initialView();
+        ready();
+    }
+};
+
+function ready() {
+
+    document.querySelector('#github-form').onsubmit = function (event) {
         event.preventDefault();
 
         showLoading();
-        $('#form').hide();
+        document.querySelector('#form').style.display = 'none';
 
-        githubUsername = $('#github-username').val();
-        githubFineGrainAccessToken = $('#github-access-token').val();
+        githubUsername = document.querySelector('#github-username').value;
+        githubFineGrainAccessToken = document.querySelector('#github-access-token').value;
 
         authenticateAndFetchData(githubUsername, githubFineGrainAccessToken);
-    });
+
+    };
 
     // search new user
-    $('#searchNew').click(function () {
+    document.querySelector('#searchNew').onclick = function () {
         initialView();
 
-        $('#github-username').val('');
-        $('#github-username').focus();
-    });
+        document.querySelector('#github-username').val('');
+        document.querySelector('#github-username').focus();
+    };
 
-    $('#btnSortIDAsc').click(function () {
+    document.querySelector('#btnSortIDAsc').onclick = function () {
         followerNames.sort(sortID);
         followingNames.sort(sortID);
         followersNotFollowing.sort(sortID);
@@ -39,9 +51,9 @@ $(document).ready(function () {
         displayFollowersNotFollowing();
         displayFollowingNotFollowers();
         displayFollowersFollowing();
-    });
+    };
 
-    $('#btnSortIDDesc').click(function () {
+    document.querySelector('#btnSortIDDesc').onclick = function () {
         followerNames.sort(sortID).reverse();
         followingNames.sort(sortID).reverse();
         followersNotFollowing.sort(sortID).reverse();
@@ -51,9 +63,9 @@ $(document).ready(function () {
         displayFollowersNotFollowing();
         displayFollowingNotFollowers();
         displayFollowersFollowing();
-    });
+    };
 
-    $('#btnSortAsc').click(function () {
+    document.querySelector('#btnSortAsc').onclick = function () {
         followerNames.sort(sortIgnoreCase);
         followingNames.sort(sortIgnoreCase);
         followersNotFollowing.sort(sortIgnoreCase);
@@ -63,9 +75,9 @@ $(document).ready(function () {
         displayFollowersNotFollowing();
         displayFollowingNotFollowers();
         displayFollowersFollowing();
-    });
+    };
 
-    $('#btnSortDesc').click(function () {
+    document.querySelector('#btnSortDesc').onclick = function () {
         followerNames.sort(sortIgnoreCase).reverse();
         followingNames.sort(sortIgnoreCase).reverse();
         followersNotFollowing.sort(sortIgnoreCase).reverse();
@@ -75,9 +87,9 @@ $(document).ready(function () {
         displayFollowersNotFollowing();
         displayFollowingNotFollowers();
         displayFollowersFollowing();
-    });
+    };
 
-    $('#btnDownloadJSON').click(function () {
+    document.querySelector('#btnDownloadJSON').onclick = function () {
         // build up followers data object and save as json
         let userData = [
             { "user": githubUsername },
@@ -95,8 +107,8 @@ $(document).ready(function () {
         link.href = window.URL.createObjectURL(blob);
         link.download = `${githubUsername}_followers_${date}.txt`;
         link.click();
-    });
-});
+    };
+};
 
 function sortIgnoreCase(a, b) {
   return a.login.toLowerCase().localeCompare(b.login.toLowerCase());
@@ -122,48 +134,42 @@ function showError(error) {
 
 ////////// loading //////////
 
-// Hide the loading when the document is fully loaded
-document.onreadystatechange = function () {
-    if (document.readyState === "complete") {
-        hideLoading();
-        initialView();
-    }
-};
+
 
 function initialView() {
-    $('#form').show();
-    $('#userDetails').hide();
-    $('#img-divs').hide();
-    $('#summary').hide();
-    $('#followers-not-following-div').hide();
-    $('#following-not-followers-div').hide();
-    $('#followers-following-div').hide();
-    $('#loading-container').hide();
-    $('#searchNew').hide();
+    document.querySelector('#form').style.display = '';
+    document.querySelector('#userDetails').style.display = 'none';
+    //document.querySelector('#img-divs').style.display = 'none';
+    document.querySelector('#summary').style.display = 'none';
+    document.querySelector('#followers-not-following-div').style.display = 'none';
+    document.querySelector('#following-not-followers-div').style.display = 'none';
+    document.querySelector('#followers-following-div').style.display = 'none';
+    document.querySelector('#loading-container').style.display = 'none';
+    document.querySelector('#searchNew').style.display = 'none';
 }
 
 function showLoading() {
-    $('#loading-container').show();
+    document.querySelector('#loading-container').style.display = '';
 
-    $('#userDetails').hide();
-    $('#img-divs').hide();
-    $('#summary').hide();
-    $('#followers-not-following-div').hide();
-    $('#following-not-followers-div').hide();
-    $('#followers-following-div').hide();
-    $('#searchNew').hide();
+    document.querySelector('#userDetails').style.display = 'none';
+    //document.querySelector('#img-divs').style.display = 'none';
+    document.querySelector('#summary').style.display = 'none';
+    document.querySelector('#followers-not-following-div').style.display = 'none';
+    document.querySelector('#following-not-followers-div').style.display = 'none';
+    document.querySelector('#followers-following-div').style.display = 'none';
+    document.querySelector('#searchNew').style.display = 'none';
 }
 
 function hideLoading() {
-    $('#loading-container').hide();
+    document.querySelector('#loading-container').style.display = 'none';
 
-    $('#userDetails').show();
-    $('#img-divs').show();
-    $('#summary').show();
-    $('#followers-not-following-div').show();
-    $('#following-not-followers-div').show();
-    $('#followers-following-div').show();
-    $('#searchNew').show();
+    document.querySelector('#userDetails').style.display = '';
+    //document.querySelector('#img-divs').style.display = '';
+    document.querySelector('#summary').style.display = '';
+    document.querySelector('#followers-not-following-div').style.display = '';
+    document.querySelector('#following-not-followers-div').style.display = '';
+    document.querySelector('#followers-following-div').style.display = '';
+    document.querySelector('#searchNew').style.display = '';
 }
 
 ////////// fetch followers data //////////
@@ -192,8 +198,8 @@ async function authenticateAndFetchData(username, accessToken) {
         const followers = await fetchAllFollowers(username, accessToken);
         const followings = await fetchAllFollowings(username, accessToken);
 
-        $('#userImage').attr('src', user.avatar_url);
-        $('#userName').text(user.login);
+        document.querySelector('#userImage').setAttribute('src', user.avatar_url);
+        document.querySelector('#userName').textContent = user.login;
         hideLoading();
 
         displayFollowers(followers);
@@ -236,6 +242,7 @@ async function fetchPaginatedData(url, accessToken) {
     url += `?page=${page}&per_page=100`;
 
     do {
+        console.log("request: " + url)
         if (accessToken === "") {
             response = await fetch(url, {
                 headers: {
@@ -295,33 +302,33 @@ function extractNextLink(linkHeader) {
 ////////// display data //////////
 function displayFollowers(followers) {
     //console.log(followers);
-    $('#followers').text(followers.length);
+    document.querySelector('#followers').textContent = followers.length;
 }
 
 function displayFollowing(followings) {
     //console.log(followings);
-    $('#following').text(followings.length);
+    document.querySelector('#following').textContent = followings.length;
 }
 
 // check if empty arrays
 function checkEmpty() {
     if (followerNames.length === 0) {
-        $('#textNotFollowing').text("No Followers yet!");
+        document.querySelector('#textNotFollowing').textContent = "No Followers yet!";
     } else if (followersNotFollowing.length === 0) {
-        $('#textNotFollowing').text("All followers are followed back by the user!");
+        document.querySelector('#textNotFollowing').textContent = "All followers are followed back by the user!";
     } else {
-        $('#textNotFollowing').text("Here are the followers, but this user hasn't followed them.");
+        document.querySelector('#textNotFollowing').textContent = "Here are the followers, but this user hasn't followed them.";
     }
 
     if (followingNames.length === 0) {
-        $('#textNotFollowers').text("No followings yet!");
+        document.querySelector('#textNotFollowers').textContent = "No followings yet!";
     } else if (followingNotFollowers.length === 0) {
-        $('#textNotFollowers').text("The user is followed back by all followers!");
+        document.querySelector('#textNotFollowers').textContent = "The user is followed back by all followers!";
     } else {
-        $('#textNotFollowers').text("Here are the followings, but they are not following this user.");
+        document.querySelector('#textNotFollowers').textContent = "Here are the followings, but they are not following this user.";
     }
 
-    $('#textFollowersFollowing').text("Here are the followers who follow back.");
+    document.querySelector('#textFollowersFollowing').textContent = "Here are the followers who follow back.";
 }
 
 // display data 
@@ -330,7 +337,7 @@ function displayDataDiv(totalCountElement, currentPageElement, itemsPerPage, dis
     const endIndex = startIndex + itemsPerPage;
     const displayedData = paginatedArray.slice(startIndex, endIndex);
 
-    $(totalCountElement).text(paginatedArray.length);
+    document.querySelector(totalCountElement).textContent = paginatedArray.length;
 
     const profilesList = displayedData.map(name => {
         const avatarUrl = `https://github.com/${name.login}.png`;
@@ -345,7 +352,7 @@ function displayDataDiv(totalCountElement, currentPageElement, itemsPerPage, dis
         </a>`;
     });
 
-    displayDiv.html(profilesList.join(''));
+    displayDiv.innerHTML = profilesList.join('');
 
     const totalPages = Math.ceil(paginatedArray.length / itemsPerPage);
     const paginationButtons = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -355,13 +362,13 @@ function displayDataDiv(totalCountElement, currentPageElement, itemsPerPage, dis
         return `<button class="m-1 btn btn-sm btn-outline-success ${activeClass}" onclick="${changePageFunction}(${page})">${page}</button>`;
     }).join('');
 
-    paginationDiv.html(paginationHtml);
+    paginationDiv.innerHTML = paginationHtml;
 
-    $(".userDataDiv").hover(function() {
+    document.querySelector('.userDataDiv').onMouseover = function() {
         $(this).css("background-color", "grey");
     }, function() {
         $(this).css("background-color", "");
-    });
+    };
 }
 
 function displayFollowersNotFollowing() {
@@ -370,8 +377,8 @@ function displayFollowersNotFollowing() {
         '#followers-not-following-count',
         currentPage,
         itemsPerPage,
-        $('#followers-but-not-Following'),
-        $('#pagination-followers-but-not-Following'),
+        document.querySelector('#followers-but-not-Following'),
+        document.querySelector('#pagination-followers-but-not-Following'),
         followersNotFollowing,
         '#followers-not-following-count',
         'changePageFollowersNotFollowing'
@@ -384,8 +391,8 @@ function displayFollowingNotFollowers() {
         '#following-not-followers-count',
         currentPage,
         itemsPerPage,
-        $('#Following-but-not-followers'),
-        $('#pagination-Following-but-not-followers'),
+        document.querySelector('#Following-but-not-followers'),
+        document.querySelector('#pagination-Following-but-not-followers'),
         followingNotFollowers,
         '#following-not-followers-count',
         'changePageFollowingNotFollowers'
@@ -398,8 +405,8 @@ function displayFollowersFollowing() {
         '#followers-following-count',
         currentPage,
         itemsPerPage,
-        $('#followers-following'),
-        $('#pagination-followers-following'),
+        document.querySelector('#followers-following'),
+        document.querySelector('#pagination-followers-following'),
         followersFollowing,
         '#follows-following-count',
         'changePageFollowersFollowing'
@@ -423,11 +430,11 @@ function changePageFollowersFollowing(page) {
 
 ////////// summary //////////
 function updateSummary() {
-    $('#summary-total-followers').text(followerNames.length);
-    $('#summary-followed-back').text(followerNames.length - followersNotFollowing.length);
-    $('#summary-not-followed-back').text(followersNotFollowing.length);
+    document.querySelector('#summary-total-followers').textContent = followerNames.length;
+    document.querySelector('#summary-followed-back').textContent = followerNames.length - followersNotFollowing.length;
+    document.querySelector('#summary-not-followed-back').textContent = followersNotFollowing.length;
 
-    $('#summary-total-followings').text(followingNames.length);
-    $('#summary-followings-who-follow-back').text(followingNames.length - followingNotFollowers.length);
-    $('#summary-followings-not-followed-back').text(followingNotFollowers.length);
+    document.querySelector('#summary-total-followings').textContent = followingNames.length;
+    document.querySelector('#summary-followings-who-follow-back').textContent = followingNames.length - followingNotFollowers.length;
+    document.querySelector('#summary-followings-not-followed-back').textContent = followingNotFollowers.length;
 }
